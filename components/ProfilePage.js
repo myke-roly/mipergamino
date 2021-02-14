@@ -70,8 +70,7 @@ export default function ProfilePage({ user }) {
             <Button
               onClick={(e) => {
                 e.preventDefault();
-              }}
-            >
+              }}>
               Actualizar
             </Button>
           </div>

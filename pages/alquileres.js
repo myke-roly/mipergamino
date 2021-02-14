@@ -1,34 +1,37 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useEffect, useState, usePrefetchQuery } from "react";
-import Head from "next/head";
-import Filter from "~/components/Filter";
-import FilterIcon from "~/components/icons/FilterIcon";
-import RentCard from "~/components/RentCard";
-import PageTitle from "~/components/PageTitle";
-import API from "~/db/alquiler/api";
-import useInfiniteScroll from "~/utils/useInfiniteScroll";
+import { useEffect, useState, usePrefetchQuery } from 'react';
+
+import Head from 'next/head';
+import { useEffect, usePrefetchQuery, useState } from 'react';
+
+import Filter from '~/components/Filter';
+import FilterIcon from '~/components/icons/FilterIcon';
+import PageTitle from '~/components/PageTitle';
+import RentCard from '~/components/RentCard';
+import API from '~/db/alquiler/api';
+import useInfiniteScroll from '~/utils/useInfiniteScroll';
 
 export default function Alquileres({ rents }) {
-  const [userCity, setUserCity] = useState("");
-  const [userProvince, setUserProvince] = useState("");
+  const [userCity, setUserCity] = useState('');
+  const [userProvince, setUserProvince] = useState('');
   const [offset, setOffset] = useState(0);
   const { totalDocs } = rents;
   const [rentsData, setRentsData] = useState([]);
-  const [sideFilterVisibility, setSideFilterVisibility] = useState("invisible");
+  const [sideFilterVisibility, setSideFilterVisibility] = useState('invisible');
 
   useEffect(() => {
     // TODO: Ver si es mejor grabar en tabla user de Firebase.
     // en la pantalla principal no permitir ingresar si no tiene City y Province.
-    const city = localStorage.getItem("city");
-    const province = localStorage.getItem("province");
+    const city = localStorage.getItem('city');
+    const province = localStorage.getItem('province');
     if (city) {
-      console.log('city', city)
+      console.log('city', city);
       setUserCity(city);
-      console.log("userCity: ", userCity);
+      console.log('userCity: ', userCity);
     }
     if (province) {
       setUserProvince(province);
-      console.log("userProvince: ", userProvince);
+      console.log('userProvince: ', userProvince);
     }
 
     // TODO: Ver como enviar City y Province como Filter,
@@ -42,10 +45,10 @@ export default function Alquileres({ rents }) {
 
     setOffset(currentOffSet);
 
-    const Alquileres = await fetch("/api/alquiler/", {
-      method: "PUT",
+    const Alquileres = await fetch('/api/alquiler/', {
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         filters: {},
@@ -61,26 +64,11 @@ export default function Alquileres({ rents }) {
     setIsFetching(false);
   });
 
-  const handleFilter = ({
-    Habitaciones,
-    Baños,
-    Patio,
-    Garage,
-    Mascotas,
-    Niños,
-    Particular,
-  }) => {
+  const handleFilter = ({ Habitaciones, Baños, Patio, Garage, Mascotas, Niños, Particular }) => {
     const parsedBedrooms = parseInt(Habitaciones);
     const parsedBathrooms = parseInt(Baños);
     const filteredData = rents.filter(({ features, isparticular }) => {
-      const {
-        bedrooms,
-        bathrooms,
-        garage,
-        exterior,
-        petsallowed,
-        childrenallowed,
-      } = features;
+      const { bedrooms, bathrooms, garage, exterior, petsallowed, childrenallowed } = features;
       return (
         (!parsedBedrooms || parsedBedrooms === bedrooms) &&
         (!parsedBathrooms || parsedBathrooms === bathrooms) &&
@@ -104,11 +92,10 @@ export default function Alquileres({ rents }) {
         <PageTitle title="Alquileres" />
 
         <button
-          onClick={() => setSideFilterVisibility("visible")}
+          onClick={() => setSideFilterVisibility('visible')}
           className={`lg:hidden font-bold text-blue-500 my-2 flex items-center space-between`}
         >
-          <FilterIcon size={22} color={"fill-blue"} className="flex" />{" "}
-          <span className="flex pl-2">Filtros</span>
+          <FilterIcon size={22} color={'fill-blue'} className="flex" /> <span className="flex pl-2">Filtros</span>
         </button>
 
         <Filter
@@ -119,10 +106,7 @@ export default function Alquileres({ rents }) {
       </div>
 
       <div className={`flex flex-row lg:flex-col lg:items-center`}>
-        <div
-          className="w-full lg:w-3/4 flex flex-col"
-          style={{ position: "absolute", top: 70 }}
-        >
+        <div className="w-full lg:w-3/4 flex flex-col" style={{ position: 'absolute', top: 70 }}>
           {/* {rentsData.length
             ? rentsData.map((rent) => <RentCard rent={rent} key={rent._id} />)
             : rents.docs.map((rent) => <RentCard rent={rent} key={rent._id} />)} */}
@@ -151,7 +135,7 @@ export const getServerSideProps = async ({ query }) => {
       },
     };
   } catch (err) {
-    console.log("err", err);
+    console.log('err', err);
     return {
       props: {
         rents: [],
